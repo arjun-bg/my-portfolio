@@ -32,14 +32,13 @@
         const CATEGORIES = [
             { id: 'logo', title: 'Logos', description: 'Visual identities & branding systems.', count: 4 },
             { id: 'banner', title: 'Banners', description: 'Digital advertising and website hero assets.', count: 3, layout: 'stack' },
-            { id: 'pack', title: 'Packaging', description: 'Physical product design & box layouts.', count: 4 },
+            { id: 'pack', title: 'Packaging', description: 'Physical product design & box layouts.', count: 5 }, // Updated to 5 per your list
             { id: 'poster', title: 'Posters', description: 'Large scale print and digital poster art.', count: 3, layout: 'row' },
             { id: 'cartoon', title: 'Cartoons', description: 'Character design & digital illustrations.', count: 1 },
             { id: 'sm', title: 'Social Media', description: 'Dynamic content for digital platforms.', count: 1, layout: 'square' },
             { id: 'other', title: 'Other', description: 'NFTs, 3D explorations, and experiments.', count: 1 }
         ];
 
-        // Folder path based on your earlier setup
         const IMAGE_BASE_PATH = "oublic/images/"; 
         const PLACEHOLDER = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop";
 
@@ -47,11 +46,37 @@
             const [selectedCategory, setSelectedCategory] = useState(null);
             const [fullscreenImg, setFullscreenImg] = useState(null);
 
-            const handleImageError = (e) => {
-                if (!e.target.src.includes('unsplash')) {
-                    e.target.src = PLACEHOLDER;
-                    e.target.style.opacity = "0.2";
-                }
+            // This function handles the extension guessing logic
+            const SmartImage = ({ id, num, layout, alt, className, onImageClick }) => {
+                const [extIndex, setExtIndex] = useState(0);
+                const extensions = ['.png', '.jpg', '.jpeg'];
+                const currentSrc = `${IMAGE_BASE_PATH}${id}${num}${extensions[extIndex]}`;
+
+                const handleError = () => {
+                    if (extIndex < extensions.length - 1) {
+                        setExtIndex(extIndex + 1); // Try the next extension
+                    }
+                };
+
+                const isPlaceholder = extIndex === extensions.length - 1 && !currentSrc;
+
+                return (
+                    <div 
+                        onClick={() => onImageClick(currentSrc)}
+                        className={`relative overflow-hidden bg-neutral-900/50 rounded-sm cursor-zoom-in transition-all duration-500 hover:ring-1 hover:ring-white/20 ${className}`}
+                    >
+                        <img
+                            src={extIndex >= extensions.length ? PLACEHOLDER : currentSrc}
+                            alt={alt}
+                            onError={handleError}
+                            className={`
+                                w-full transition-transform duration-700 hover:scale-[1.03]
+                                ${layout === 'square' ? 'h-full object-cover' : 'h-auto object-contain'}
+                                ${extIndex >= extensions.length ? 'opacity-20 grayscale' : ''}
+                            `}
+                        />
+                    </div>
+                );
             };
 
             useEffect(() => {
@@ -78,14 +103,16 @@
                                     className="relative flex-none h-[30vh] md:h-full md:flex-1 group cursor-pointer border-b md:border-b-0 md:border-r border-white/5 last:border-r-0 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] md:hover:flex-[2.5]"
                                 >
                                     <div className="absolute inset-0 bg-neutral-900 overflow-hidden">
-                                        <img
-                                            src={`${IMAGE_BASE_PATH}${cat.id}1.png`}
-                                            alt={cat.title}
-                                            onError={handleImageError}
-                                            className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000"
+                                        <SmartImage 
+                                            id={cat.id} 
+                                            num={1} 
+                                            alt={cat.title} 
+                                            className="w-full h-full"
+                                            layout="square"
+                                            onImageClick={() => {}} // No zoom on home tiles
                                         />
                                     </div>
-                                    <div className="absolute inset-0 flex flex-col justify-between p-8 z-10">
+                                    <div className="absolute inset-0 flex flex-col justify-between p-8 z-10 pointer-events-none">
                                         <span className="text-[10px] font-mono opacity-30">0{index + 1}</span>
                                         <div className="mb-4">
                                             <h2 className="text-2xl md:text-4xl font-light tracking-tight group-hover:-translate-y-2 transition-transform duration-500">
@@ -120,28 +147,20 @@
                             `}>
                                 {Array.from({ length: selectedCategory.count }).map((_, i) => {
                                     const num = i + 1;
-                                    const imgSrc = `${IMAGE_BASE_PATH}${selectedCategory.id}${num}.png`;
                                     return (
-                                        <div 
-                                            key={num} 
-                                            onClick={() => setFullscreenImg(imgSrc)}
+                                        <SmartImage 
+                                            key={num}
+                                            id={selectedCategory.id}
+                                            num={num}
+                                            alt={`${selectedCategory.title} ${num}`}
+                                            layout={selectedCategory.layout}
+                                            onImageClick={setFullscreenImg}
                                             className={`
-                                                relative overflow-hidden bg-neutral-900/50 rounded-sm cursor-zoom-in transition-all duration-500 hover:ring-1 hover:ring-white/20
                                                 ${selectedCategory.layout === 'square' ? 'aspect-square' : ''}
                                                 ${selectedCategory.layout === 'row' ? 'flex-none w-[85vw] md:w-[45vw] lg:w-[30vw]' : 'w-full inline-block'}
                                                 ${selectedCategory.layout === 'stack' ? 'max-w-6xl mx-auto' : ''}
                                             `}
-                                        >
-                                            <img
-                                                src={imgSrc}
-                                                alt={`${selectedCategory.title} ${num}`}
-                                                onError={handleImageError}
-                                                className={`
-                                                    w-full transition-transform duration-700 hover:scale-[1.03]
-                                                    ${selectedCategory.layout === 'square' ? 'h-full object-cover' : 'h-auto object-contain'}
-                                                `}
-                                            />
-                                        </div>
+                                        />
                                     );
                                 })}
                             </div>
@@ -160,6 +179,7 @@
                                 src={fullscreenImg} 
                                 className="max-w-full max-h-full object-contain shadow-2xl"
                                 alt="Full screen view"
+                                onError={(e) => { e.target.src = PLACEHOLDER }}
                             />
                         </div>
                     )}
