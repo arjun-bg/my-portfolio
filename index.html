@@ -24,7 +24,6 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // MATCHING YOUR FILENAMES
         const CATEGORIES = [
             { id: 'logo', title: 'Logos', description: 'Visual identities & branding systems.', count: 3 },
             { id: 'banner', title: 'Banners', description: 'Digital advertising and website hero assets.', count: 3 },
@@ -41,13 +40,15 @@
             const [selectedCategory, setSelectedCategory] = useState(null);
 
             const handleImageError = (e) => {
-                e.target.src = PLACEHOLDER;
-                e.target.style.opacity = "0.2";
+                // If it fails to find the image in 'oublic', try a backup placeholder
+                if (!e.target.src.includes('unsplash')) {
+                    e.target.src = PLACEHOLDER;
+                    e.target.style.opacity = "0.2";
+                }
             };
 
             return (
                 <div className="min-h-screen">
-                    {/* Header */}
                     <nav className="fixed top-0 left-0 w-full z-50 p-6 md:p-8 flex justify-between items-start mix-blend-difference pointer-events-none">
                         <div className="pointer-events-auto">
                             <h1 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase leading-none">Arjun</h1>
@@ -56,7 +57,6 @@
                     </nav>
 
                     {!selectedCategory ? (
-                        /* Vertical on phone (flex-col), Horizontal on desktop (md:flex-row) */
                         <div className="flex flex-col md:flex-row h-screen w-full pt-24 md:pt-0 overflow-y-auto md:overflow-hidden">
                             {CATEGORIES.map((cat, index) => (
                                 <div
@@ -66,7 +66,7 @@
                                 >
                                     <div className="absolute inset-0 bg-neutral-900 overflow-hidden">
                                         <img
-                                            src={`/images/${cat.id}1.png`}
+                                            src={`/oublic/images/${cat.id}1.png`}
                                             alt={cat.title}
                                             onError={handleImageError}
                                             className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000"
@@ -85,9 +85,7 @@
                             ))}
                         </div>
                     ) : (
-                        /* Gallery View */
                         <div className="pt-48 p-8 md:p-16 animate-in fade-in duration-500">
-                            {/* BACK BUTTON */}
                             <button
                                 onClick={() => setSelectedCategory(null)}
                                 className="fixed top-8 left-8 md:top-12 md:left-16 z-[60] flex items-center gap-3 text-[10px] uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity mix-blend-difference pointer-events-auto"
@@ -109,7 +107,7 @@
                                     return (
                                         <div key={num} className={`group relative overflow-hidden bg-neutral-900 ${isLarge ? 'md:col-span-8 aspect-[16/9]' : 'md:col-span-4 aspect-square'}`}>
                                             <img
-                                                src={`/images/${selectedCategory.id}${num}.png`}
+                                                src={`/oublic/images/${selectedCategory.id}${num}.png`}
                                                 alt="Project"
                                                 onError={handleImageError}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
