@@ -39,6 +39,8 @@
             { id: 'other', title: 'Other', description: 'NFTs, 3D explorations, and experiments.', count: 1 }
         ];
 
+        // Folder path based on your earlier setup
+        const IMAGE_BASE_PATH = "oublic/images/"; 
         const PLACEHOLDER = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop";
 
         const App = () => {
@@ -77,7 +79,7 @@
                                 >
                                     <div className="absolute inset-0 bg-neutral-900 overflow-hidden">
                                         <img
-                                            src={`${cat.id}1.png`}
+                                            src={`${IMAGE_BASE_PATH}${cat.id}1.png`}
                                             alt={cat.title}
                                             onError={handleImageError}
                                             className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000"
@@ -118,7 +120,7 @@
                             `}>
                                 {Array.from({ length: selectedCategory.count }).map((_, i) => {
                                     const num = i + 1;
-                                    const imgSrc = `${selectedCategory.id}${num}.png`;
+                                    const imgSrc = `${IMAGE_BASE_PATH}${selectedCategory.id}${num}.png`;
                                     return (
                                         <div 
                                             key={num} 
