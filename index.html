@@ -31,12 +31,12 @@
 
         const CATEGORIES = [
             { id: 'logo', title: 'Logos', description: 'Visual identities & branding systems.', count: 4 },
-            { id: 'banner', title: 'Banners', description: 'Digital advertising and website hero assets.', count: 3, layout: 'stack' },
+            { id: 'banner', title: 'Banners', description: 'Digital advertising and website hero assets.', count: 4, layout: 'stack' },
             { id: 'pack', title: 'Packaging', description: 'Physical product design & box layouts.', count: 5 },
-            { id: 'poster', title: 'Posters', description: 'Large scale print and digital poster art.', count: 3, layout: 'row' },
+            { id: 'poster', title: 'Posters', description: 'Large scale print and digital poster art.', count: 6, layout: 'row' },
             { id: 'cartoon', title: 'Cartoons', description: 'Character design & digital illustrations.', count: 1 },
-            { id: 'sm', title: 'Social Media', description: 'Dynamic content for digital platforms.', count: 1, layout: 'square' },
-            { id: 'other', title: 'Other', description: 'NFTs, 3D explorations, and experiments.', count: 1 }
+            { id: 'sm', title: 'Social Media', description: 'Dynamic content for digital platforms.', count: 3, layout: 'square' },
+            { id: 'other', title: 'Other', description: 'NFTs, 3D explorations, and experiments.', count: 1, layout: 'centered' }
         ];
 
         const IMAGE_BASE_PATH = "oublic/images/"; 
@@ -141,7 +141,8 @@
 
                             <div className={`
                                 ${selectedCategory.layout === 'stack' ? 'flex flex-col items-center gap-12' : 
-                                  selectedCategory.layout === 'row' ? 'flex flex-row overflow-x-auto gap-8 pb-10 no-scrollbar items-start' : 
+                                  selectedCategory.layout === 'row' ? 'grid grid-cols-1 md:grid-cols-3 gap-8 pb-10' : 
+                                  selectedCategory.layout === 'centered' ? 'flex justify-center' :
                                   'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center'}
                             `}>
                                 {Array.from({ length: selectedCategory.count }).map((_, i) => {
@@ -156,8 +157,9 @@
                                             onImageClick={setFullscreenImg}
                                             className={`
                                                 ${selectedCategory.layout === 'square' ? 'aspect-square max-w-sm' : ''}
-                                                ${selectedCategory.layout === 'row' ? 'flex-none w-[85vw] md:w-[45vw] lg:w-[30vw]' : 'w-full'}
+                                                ${selectedCategory.layout === 'row' ? 'w-full aspect-[2/3]' : 'w-full'}
                                                 ${selectedCategory.layout === 'stack' ? 'max-w-6xl mx-auto' : ''}
+                                                ${selectedCategory.layout === 'centered' ? 'max-w-4xl aspect-video' : ''}
                                                 ${!selectedCategory.layout ? 'max-w-md md:max-w-full' : ''}
                                             `}
                                         />
