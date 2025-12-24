@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjun | Graphic Designer & Visionary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; margin: 0; }
+        .grain {
+            position: fixed; inset: 0; pointer-events: none; opacity: 0.03; z-index: 100;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <div class="grain"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // PLACEHOLDERS: These will show if your local images are missing
+        const PLACEHOLDERS = {
+            logos: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000",
+            banners: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1000",
+            packaging: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000",
+            posters: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000",
+            cartoons: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?q=80&w=1000",
+            social: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000",
+            other: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1000"
+        };
+
+        const CATEGORIES = [
+            { id: 'logos', title: 'Logos', description: 'Visual identities & branding systems.' },
+            { id: 'banners', title: 'Banners', description: 'Digital advertising and website hero assets.' },
+            { id: 'packaging', title: 'Packaging', description: 'Physical product design & box layouts.' },
+            { id: 'posters', title: 'Posters', description: 'Large scale print and digital poster art.' },
+            { id: 'cartoons', title: 'Cartoons', description: 'Character design & digital illustrations.' },
+            { id: 'social', title: 'Social Media', description: 'Dynamic content for digital platforms.' },
+            { id: 'other', title: 'Other', description: 'NFTs, 3D explorations, and experiments.' }
+        ];
+
+        const App = () => {
+            const [selectedCategory, setSelectedCategory] = useState(null);
+
+            const handleImageError = (e, catId) => {
+                e.target.src = PLACEHOLDERS[catId] || PLACEHOLDERS.other;
+                e.target.style.opacity = "0.4";
+            };
+
+            return (
+                <div className="min-h-screen">
+                    <nav className="fixed top-0 left-0 w-full z-50 p-6 md:p-8 flex justify-between items-start mix-blend-difference pointer-events-none">
+                        <div className="pointer-events-auto">
+                            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase leading-none">Arjun</h1>
+                            <p className="text-[10px] md:text-[11px] mt-2 tracking-[0.4em] uppercase opacity-70 font-medium whitespace-nowrap">Graphic Designer / Visionary</p>
+                        </div>
+                    </nav>
+
+                    {!selectedCategory ? (
+                        <div className="flex flex-col md:flex-row h-screen w-full pt-32 md:pt-0 overflow-hidden">
+                            {CATEGORIES.map((cat, index) => (
+                                <div
+                                    key={cat.id}
+                                    onClick={() => setSelectedCategory(cat)}
+                                    className="relative flex-1 group cursor-pointer border-b md:border-b-0 md:border-r border-white/5 last:border-r-0 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] hover:flex-[2.5]"
+                                >
+                                    <div className="absolute inset-0 bg-neutral-900 overflow-hidden">
+                                        <img
+                                            src={`/images/${cat.id}1.jpg`}
+                                            alt={cat.title}
+                                            onError={(e) => handleImageError(e, cat.id)}
+                                            className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000"
+                                        />
+                                    </div>
+                                    <div className="absolute inset-0 flex flex-col justify-between p-8 z-10">
+                                        <span className="text-[10px] font-mono opacity-30">0{index + 1}</span>
+                                        <div className="mb-4">
+                                            <h2 className="text-3xl md:text-4xl font-light tracking-tight group-hover:-translate-y-2 transition-transform duration-500">
+                                                {cat.title}
+                                            </h2>
+                                            <div className="h-px w-0 group-hover:w-full bg-white/40 transition-all duration-500 mt-2" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="pt-48 p-8 md:p-16">
+                            <button
+                                onClick={() => setSelectedCategory(null)}
+                                className="fixed top-8 left-8 md:top-12 md:left-16 z-[60] flex items-center gap-3 text-[10px] uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity mix-blend-difference"
+                            >
+                                ← Back
+                            </button>
+                            <header className="max-w-5xl mb-24">
+                                <h2 className="text-6xl md:text-[10rem] font-light tracking-tighter mb-8 leading-[0.85]">{selectedCategory.title}</h2>
+                                <p className="text-xl md:text-3xl text-neutral-500 font-light max-w-2xl leading-tight">
+                                    {selectedCategory.description}
+                                </p>
+                            </header>
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 pb-20">
+                                {[1, 2, 3].map((num) => (
+                                    <div key={num} className={`group relative overflow-hidden bg-neutral-900 ${num === 1 ? 'md:col-span-8 aspect-[16/9]' : 'md:col-span-4 aspect-square'}`}>
+                                        <img
+                                            src={`/images/${selectedCategory.id}${num}.jpg`}
+                                            alt="Project"
+                                            onError={(e) => handleImageError(e, selectedCategory.id)}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
