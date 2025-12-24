@@ -25,12 +25,12 @@
         const { useState } = React;
 
         const CATEGORIES = [
-            { id: 'logo', title: 'Logos', description: 'Visual identities & branding systems.', count: 3 },
-            { id: 'banner', title: 'Banners', description: 'Digital advertising and website hero assets.', count: 3 },
-            { id: 'pack', title: 'Packaging', description: 'Physical product design & box layouts.', count: 4 },
-            { id: 'poster', title: 'Posters', description: 'Large scale print and digital poster art.', count: 3 },
-            { id: 'cartoon', title: 'Cartoons', description: 'Character design & digital illustrations.', count: 1 },
-            { id: 'sm', title: 'Social Media', description: 'Dynamic content for digital platforms.', count: 1 },
+            { id: 'logos', title: 'Logos', description: 'Visual identities & branding systems.', count: 3 },
+            { id: 'banners', title: 'Banners', description: 'Digital advertising and website hero assets.', count: 3 },
+            { id: 'packaging', title: 'Packaging', description: 'Physical product design & box layouts.', count: 4 },
+            { id: 'posters', title: 'Posters', description: 'Large scale print and digital poster art.', count: 3 },
+            { id: 'cartoons', title: 'Cartoons', description: 'Character design & digital illustrations.', count: 1 },
+            { id: 'social', title: 'Social Media', description: 'Dynamic content for digital platforms.', count: 1 },
             { id: 'other', title: 'Other', description: 'NFTs, 3D explorations, and experiments.', count: 1 }
         ];
 
@@ -40,7 +40,6 @@
             const [selectedCategory, setSelectedCategory] = useState(null);
 
             const handleImageError = (e) => {
-                // If it fails to find the image in 'oublic', try a backup placeholder
                 if (!e.target.src.includes('unsplash')) {
                     e.target.src = PLACEHOLDER;
                     e.target.style.opacity = "0.2";
@@ -66,7 +65,7 @@
                                 >
                                     <div className="absolute inset-0 bg-neutral-900 overflow-hidden">
                                         <img
-                                            src={`/oublic/images/${cat.id}1.png`}
+                                            src={`oublic/images/${cat.id}1.png`}
                                             alt={cat.title}
                                             onError={handleImageError}
                                             className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110 transition-all duration-1000"
@@ -107,7 +106,7 @@
                                     return (
                                         <div key={num} className={`group relative overflow-hidden bg-neutral-900 ${isLarge ? 'md:col-span-8 aspect-[16/9]' : 'md:col-span-4 aspect-square'}`}>
                                             <img
-                                                src={`/oublic/images/${selectedCategory.id}${num}.png`}
+                                                src={`oublic/images/${selectedCategory.id}${num}.png`}
                                                 alt="Project"
                                                 onError={handleImageError}
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
