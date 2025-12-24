@@ -32,7 +32,7 @@
         const CATEGORIES = [
             { id: 'logo', title: 'Logos', description: 'Visual identities & branding systems.', count: 4 },
             { id: 'banner', title: 'Banners', description: 'Digital advertising and website hero assets.', count: 3, layout: 'stack' },
-            { id: 'pack', title: 'Packaging', description: 'Physical product design & box layouts.', count: 5 }, // Updated to 5 per your list
+            { id: 'pack', title: 'Packaging', description: 'Physical product design & box layouts.', count: 5 },
             { id: 'poster', title: 'Posters', description: 'Large scale print and digital poster art.', count: 3, layout: 'row' },
             { id: 'cartoon', title: 'Cartoons', description: 'Character design & digital illustrations.', count: 1 },
             { id: 'sm', title: 'Social Media', description: 'Dynamic content for digital platforms.', count: 1, layout: 'square' },
@@ -46,19 +46,16 @@
             const [selectedCategory, setSelectedCategory] = useState(null);
             const [fullscreenImg, setFullscreenImg] = useState(null);
 
-            // This function handles the extension guessing logic
-            const SmartImage = ({ id, num, layout, alt, className, onImageClick }) => {
+            const SmartImage = ({ id, num, layout, alt, className, onImageClick, forceGrayscale = false }) => {
                 const [extIndex, setExtIndex] = useState(0);
                 const extensions = ['.png', '.jpg', '.jpeg'];
                 const currentSrc = `${IMAGE_BASE_PATH}${id}${num}${extensions[extIndex]}`;
 
                 const handleError = () => {
                     if (extIndex < extensions.length - 1) {
-                        setExtIndex(extIndex + 1); // Try the next extension
+                        setExtIndex(extIndex + 1);
                     }
                 };
-
-                const isPlaceholder = extIndex === extensions.length - 1 && !currentSrc;
 
                 return (
                     <div 
@@ -70,8 +67,9 @@
                             alt={alt}
                             onError={handleError}
                             className={`
-                                w-full transition-transform duration-700 hover:scale-[1.03]
+                                w-full transition-all duration-1000
                                 ${layout === 'square' ? 'h-full object-cover' : 'h-auto object-contain'}
+                                ${forceGrayscale ? 'grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-80 group-hover:scale-110' : 'hover:scale-[1.03]'}
                                 ${extIndex >= extensions.length ? 'opacity-20 grayscale' : ''}
                             `}
                         />
@@ -109,7 +107,8 @@
                                             alt={cat.title} 
                                             className="w-full h-full"
                                             layout="square"
-                                            onImageClick={() => {}} // No zoom on home tiles
+                                            forceGrayscale={true}
+                                            onImageClick={() => {}} 
                                         />
                                     </div>
                                     <div className="absolute inset-0 flex flex-col justify-between p-8 z-10 pointer-events-none">
@@ -141,9 +140,9 @@
                             </header>
 
                             <div className={`
-                                ${selectedCategory.layout === 'stack' ? 'flex flex-col gap-12' : 
+                                ${selectedCategory.layout === 'stack' ? 'flex flex-col items-center gap-12' : 
                                   selectedCategory.layout === 'row' ? 'flex flex-row overflow-x-auto gap-8 pb-10 no-scrollbar items-start' : 
-                                  'columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6'}
+                                  'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center'}
                             `}>
                                 {Array.from({ length: selectedCategory.count }).map((_, i) => {
                                     const num = i + 1;
@@ -156,9 +155,10 @@
                                             layout={selectedCategory.layout}
                                             onImageClick={setFullscreenImg}
                                             className={`
-                                                ${selectedCategory.layout === 'square' ? 'aspect-square' : ''}
-                                                ${selectedCategory.layout === 'row' ? 'flex-none w-[85vw] md:w-[45vw] lg:w-[30vw]' : 'w-full inline-block'}
+                                                ${selectedCategory.layout === 'square' ? 'aspect-square max-w-sm' : ''}
+                                                ${selectedCategory.layout === 'row' ? 'flex-none w-[85vw] md:w-[45vw] lg:w-[30vw]' : 'w-full'}
                                                 ${selectedCategory.layout === 'stack' ? 'max-w-6xl mx-auto' : ''}
+                                                ${!selectedCategory.layout ? 'max-w-md md:max-w-full' : ''}
                                             `}
                                         />
                                     );
